@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createDemoState, renderDemo } from "@/lib/demos";
 import type { Concept } from "@/lib/concepts";
 import { clamp } from "@/lib/math";
+import { useLocale } from "@/components/LocaleProvider";
+import { animationLabel, messages } from "@/lib/i18n";
 
 function subscribeReducedMotion(callback: () => void): () => void {
   const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -14,6 +16,8 @@ const getReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduc
 const getServerSnapshot = () => false;
 
 export function Demo({ concept, large = false }: { concept: Concept; large?: boolean }) {
+  const locale = useLocale();
+  const t = messages[locale];
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const simulation = useRef(createDemoState());
   const settings = useRef({ paused: false, speed: 1 });
@@ -46,7 +50,7 @@ export function Demo({ concept, large = false }: { concept: Concept; large?: boo
         state.time += elapsed;
         ctx.save();
         ctx.setTransform(canvas.width / 420, 0, 0, canvas.height / 250, 0, 0);
-        renderDemo(ctx, concept.slug, concept.category, state, elapsed);
+        renderDemo(ctx, concept.slug, concept.category, state, elapsed, locale, concept.title);
         ctx.restore();
         state.frame++;
         canvas.dataset.frame = String(state.frame);
@@ -103,7 +107,7 @@ export function Demo({ concept, large = false }: { concept: Concept; large?: boo
       canvas.removeEventListener("pointerleave", onLeave); canvas.removeEventListener("keydown", onKey);
       canvas.removeEventListener("demo-refresh", onRefresh); document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [concept.slug, concept.category]);
+  }, [concept.slug, concept.category, concept.title, locale]);
 
   function replay(nextSeed = seed, nextVariant = variant) {
     simulation.current = createDemoState(nextSeed);
@@ -114,14 +118,14 @@ export function Demo({ concept, large = false }: { concept: Concept; large?: boo
   return (
     <div className={`demo${large ? " demo--large" : ""}`}>
       <canvas ref={canvasRef} width={420} height={250} role="img" tabIndex={0}
-        aria-label={`${concept.title}: ${concept.tagline}. Use arrow keys or the pointer to explore.`} />
-      <div className="demo__caption">Live example <span aria-hidden="true">·</span> point or use arrow keys to explore</div>
+        aria-label={`${concept.title}: ${concept.tagline}. ${t.demoInstructions}`} />
+      <div className="demo__caption">{t.demoCaption} <span aria-hidden="true">·</span> {t.demoExplore}</div>
       <div className="demo__controls">
-        <button type="button" onClick={() => setPauseOverride(!paused)} aria-label={`${paused ? "Play" : "Pause"} ${concept.title} animation`} aria-pressed={paused}>{paused ? "Play" : "Pause"}</button>
-        <button type="button" onClick={() => replay()} aria-label={`Replay ${concept.title} animation`}>Replay</button>
-        {concept.slug === "seeded-noise" && <button type="button" onClick={() => { const next = seed + 137; setSeed(next); replay(next); }}>New seed <span>{seed}</span></button>}
-        {modeControl && <button type="button" onClick={() => { const next = variant + 1; setVariant(next); replay(seed, next); }}>{concept.slug === "particle-system" ? "Change effect" : "Toggle view"}</button>}
-        {large && <label className="demo__speed">Speed <input type="range" min="0.25" max="2" step="0.25" defaultValue="1" onChange={event => { settings.current.speed = Number(event.target.value); }} aria-label="Animation speed" /></label>}
+        <button type="button" onClick={() => setPauseOverride(!paused)} aria-label={animationLabel(locale, paused ? "play" : "pause", concept.title)} aria-pressed={paused}>{paused ? t.play : t.pause}</button>
+        <button type="button" onClick={() => replay()} aria-label={animationLabel(locale, "replay", concept.title)}>{t.replay}</button>
+        {concept.slug === "seeded-noise" && <button type="button" onClick={() => { const next = seed + 137; setSeed(next); replay(next); }}>{t.newSeed} <span>{seed}</span></button>}
+        {modeControl && <button type="button" onClick={() => { const next = variant + 1; setVariant(next); replay(seed, next); }}>{concept.slug === "particle-system" ? t.changeEffect : t.toggleView}</button>}
+        {large && <label className="demo__speed">{t.speed} <input type="range" min="0.25" max="2" step="0.25" defaultValue="1" onChange={event => { settings.current.speed = Number(event.target.value); }} aria-label={t.animationSpeed} /></label>}
       </div>
     </div>
   );

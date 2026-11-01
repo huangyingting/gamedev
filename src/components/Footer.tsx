@@ -1,11 +1,14 @@
 import Link from "next/link";
+import { localePath, messages, type Locale } from "@/lib/i18n";
 
-export function Footer() {
+export function Footer({ locale }: { locale: Locale }) {
+  const t = messages[locale];
+  const path = (href: string) => localePath(locale, href);
   return (
     <footer className="site-footer">
-      <div><strong>Game dev lab<span className="footer-dot">.</span></strong><p>Small experiments. Better games.</p><a href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">Source on GitHub ↗</a></div>
-      <nav aria-label="Site information"><Link href="/about/">About</Link><Link href="/privacy/">Privacy</Link><Link href="/#updates">Updates</Link><Link href="/#top">Back to top ↑</Link></nav>
-      <p className="site-footer__credit">Built with Next.js & TypeScript. Open source under the MIT license. No tracking, just tinkering.</p>
+      <div><strong>{locale === "zh" ? "游戏开发实验室" : "Game dev lab"}<span className="footer-dot">.</span></strong><p>{t.footerTagline}</p><a href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">{t.sourceGitHub} ↗</a></div>
+      <nav aria-label={t.siteInformation}><Link href={path("/about/")}>{t.about}</Link><Link href={path("/privacy/")}>{t.privacy}</Link><Link href={path("/#updates")}>{t.updates}</Link><Link href={path("/#top")}>{t.backTop} ↑</Link></nav>
+      <p className="site-footer__credit">{t.footerCredit}</p>
     </footer>
   );
 }

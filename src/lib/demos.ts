@@ -1,5 +1,7 @@
 import { clamp, easeOutCubic, findPath, lerp, quaternionFromEuler, rayRect, rotateVector, seededRandom, slerp, valueNoise, type Vec2 } from "./math";
 import type { Category } from "./concepts";
+import type { Locale } from "./i18n";
+import { translateDemoText } from "./demo-i18n";
 
 const W = 420;
 const H = 250;
@@ -44,7 +46,7 @@ export function createDemoState(seed = 42): DemoState {
   };
 }
 
-export function renderDemo(ctx: CanvasRenderingContext2D, slug: string, category: Category, state: DemoState, dt: number): void {
+export function renderDemo(ctx: CanvasRenderingContext2D, slug: string, category: Category, state: DemoState, dt: number, locale: Locale = "en", title = slug): void {
   const t = state.time;
   const accent = colors[category];
   ctx.clearRect(0, 0, W, H);
@@ -54,7 +56,9 @@ export function renderDemo(ctx: CanvasRenderingContext2D, slug: string, category
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   const text = (message: string, x: number, y: number, color = muted, size = 10) => {
-    ctx.fillStyle = color; ctx.font = `${size}px ui-monospace, SFMono-Regular, Consolas, monospace`; ctx.fillText(message, x, y);
+    ctx.fillStyle = color;
+    ctx.font = locale === "zh" ? `${Math.max(size, 11)}px "Noto Sans CJK SC", "Microsoft YaHei", sans-serif` : `${size}px ui-monospace, SFMono-Regular, Consolas, monospace`;
+    ctx.fillText(locale === "zh" ? translateDemoText(message) : message, x, y, W - x - 12);
   };
   const line = (x1: number, y1: number, x2: number, y2: number, color = lineColor, width = 1) => {
     ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.lineWidth = 1;
@@ -96,7 +100,7 @@ export function renderDemo(ctx: CanvasRenderingContext2D, slug: string, category
     line(18, 110, 400, 110); line(18, 205, 400, 205);
   };
   const target = state.pointing ? state.pointer : { x: 220 + Math.sin(t * 0.5) * 100, y: 120 + Math.cos(t * 0.7) * 40 };
-  text("LIVE / " + slug.toUpperCase().replaceAll("-", " "), 15, 20, accent, 9);
+  text(locale === "zh" ? `实时 / ${title}` : "LIVE / " + slug.toUpperCase().replaceAll("-", " "), 15, 20, accent, 9);
 
   switch (slug) {
     case "raycasting": {
