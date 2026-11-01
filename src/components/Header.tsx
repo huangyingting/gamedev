@@ -46,7 +46,7 @@ export function Header() {
             {(["en", "zh"] as const).map(language => (
               <a key={language} href={`${sitePath(languagePath(pathname, language))}${hash}`} lang={language === "zh" ? "zh-CN" : "en"} hrefLang={language === "zh" ? "zh-CN" : "en"}
                 aria-label={language === "zh" ? "简体中文" : "English"} aria-current={locale === language ? "page" : undefined}
-                onClick={event => { event.currentTarget.href = `${sitePath(languagePath(pathname, language))}${window.location.hash}`; }}>
+                onClick={event => { event.currentTarget.href = `${sitePath(languagePath(window.location.pathname, language))}${window.location.hash}`; }}>
                 {language === "zh" ? "CN" : "EN"}
               </a>
             ))}

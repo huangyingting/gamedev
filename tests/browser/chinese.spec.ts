@@ -85,6 +85,8 @@ test("switching languages preserves chapter hashes and information-page routes",
   await expect(page).toHaveURL(/\/gamedev\/#chapter-feel$/);
   await expect(page.locator("#chapter-feel")).toBeInViewport();
   await page.getByRole("navigation", { name: "Site information" }).getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL(/\/gamedev\/about\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("About this guide");
   await page.getByRole("link", { name: "简体中文", exact: true }).click();
   await expect(page).toHaveURL(/\/zh\/about\/$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("关于这份指南");
@@ -113,4 +115,15 @@ test("Chinese controls respect reduced motion and stay usable on narrow screens"
     await expect(page.getByRole("link", { name: "English", exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
+});
+
+test("language switch uses a just-updated browser URL before React rerenders", async ({ page }) => {
+  await page.goto("./");
+  const path = new URL("about/", page.url()).pathname;
+  await page.evaluate(path => {
+    window.history.replaceState(window.history.state, "", path);
+    document.querySelector<HTMLAnchorElement>('.language-switch a[hreflang="zh-CN"]')!.click();
+  }, path);
+  await expect(page).toHaveURL(/\/zh\/about\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("关于这份指南");
 });
