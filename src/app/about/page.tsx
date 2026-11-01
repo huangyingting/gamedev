@@ -1,0 +1,8 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "About" };
+
+export default function About() {
+  return <main id="main" className="prose"><p className="detail__kicker">Behind the examples</p><h1>About this guide</h1><p>This is an independent educational project by huangyingting, built with Next.js and TypeScript. It explores 34 common game-development techniques through small interactive Canvas 2D demonstrations.</p><h2>Inspiration and authorship</h2><p>The four-chapter, animation-and-prompt format is inspired by <a href="https://gamedev-cheatsheet.com/" target="_blank" rel="noreferrer">Game Dev Cheat Sheet by Nicolas Zullo</a>. This is not an official mirror or an affiliated project. The explanations, prompt starters, layout implementation, and animation source here are independently written. The original site&apos;s JavaScript, artwork, and prose have not been copied or translated.</p><h2>How to learn with it</h2><p>Watch the example, pause it, and move your pointer or use the arrow keys to explore. Open a concept for a practical use case, a common mistake, and an implementation sketch. These are teaching examples, not production physics or rendering engines.</p><h2>Source and updates</h2><p>The complete application and typed demo algorithms are available in the <a href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">GitHub repository</a>. Watch the repository for updates or open an issue with a correction.</p><Link className="concept-link" href="/">Explore all concepts →</Link></main>;
+}
