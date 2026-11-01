@@ -19,11 +19,11 @@ export function Header() {
   return (
     <header className="bar">
       <div className="bar__inner">
-        <Link className="logo" href="/" aria-label="Game dev cheat sheet home"><span className="logo__mark" aria-hidden="true"><i /><i /><i /><i /></span>Game dev cheat sheet</Link>
+        <Link className="logo" href="/" aria-label="Game Dev Lab home"><span className="logo__mark" aria-hidden="true"><i /><i /><i /><i /></span>Game dev <span className="logo__lab">lab</span></Link>
         <nav aria-label="Chapters" className="bar__nav">
-          {chapters.map(chapter => <Link key={chapter.id} href={`/#chapter-${chapter.id}`} data-category={chapter.id} aria-current={active === `chapter-${chapter.id}` ? "location" : undefined}>{chapter.title}</Link>)}
+          {chapters.map(chapter => <Link key={chapter.id} href={`/#chapter-${chapter.id}`} data-category={chapter.id} onClick={() => document.dispatchEvent(new Event("reset-concept-filters"))} aria-current={active === `chapter-${chapter.id}` ? "location" : undefined}>{chapter.title}</Link>)}
         </nav>
-        <Link className="bar__link" href="/#updates">Get updates <span aria-hidden="true">↗</span></Link>
+        <a className="bar__link" href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">View source <span aria-hidden="true">↗</span></a>
       </div>
     </header>
   );

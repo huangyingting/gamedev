@@ -131,3 +131,62 @@ test("every exported detail route and its assets load under the Pages prefix", a
   await page.waitForTimeout(100);
   await expect(page.locator("pre code")).toContainText("float wave");
 });
+
+test("search and chapter filters combine, explain empty results, and reset", async ({ page }) => {
+  await page.goto("./");
+  const search = page.getByRole("searchbox", { name: "Search concepts" });
+  const filters = page.getByRole("group", { name: "Filter concepts by chapter" });
+  await search.fill("  EASING  ");
+  await expect(page.locator(".card")).toHaveCount(3);
+  await expect(page.locator("#easing h3")).toHaveText("Easing");
+  await filters.getByRole("button", { name: /Performance/ }).click();
+  await expect(page.locator(".card")).toHaveCount(0);
+  await expect(page.getByText("No experiments found.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Surprise me" })).toBeDisabled();
+  await page.getByRole("button", { name: "Show all concepts" }).click();
+  await expect(page.locator(".card")).toHaveCount(34);
+  await expect(search).toHaveValue("");
+  await filters.getByRole("button", { name: /Game feel/ }).click();
+  await expect(page.locator(".card")).toHaveCount(10);
+  await expect(page.locator(".library__results [role=status]")).toHaveText("10 concepts to explore");
+  await page.getByRole("button", { name: "Reset filters" }).click();
+  await search.fill("camera");
+  expect(await page.locator(".card").count()).toBeGreaterThan(1);
+  expect(await page.locator(".card").count()).toBeLessThan(34);
+  await page.getByRole("button", { name: "Clear search" }).click();
+  await expect(search).toBeFocused();
+  await expect(page.locator(".card")).toHaveCount(34);
+});
+
+test("search keyboard shortcuts and chapter navigation restore the library", async ({ page }) => {
+  await page.goto("./");
+  const search = page.getByRole("searchbox", { name: "Search concepts" });
+  await page.keyboard.press("/");
+  await expect(search).toBeFocused();
+  await search.fill("easing");
+  await search.press("Escape");
+  await expect(search).toHaveValue("");
+  await expect(page.locator(".card")).toHaveCount(34);
+  await search.fill("easing");
+  await page.getByRole("navigation", { name: "Chapters" }).getByRole("link", { name: "Systems", exact: true }).click();
+  await expect(page.locator(".card")).toHaveCount(34);
+  await expect(page.locator("#chapter-systems")).toBeInViewport();
+});
+
+test("featured playground responds and surprise opens a matching concept", async ({ page }) => {
+  await page.goto("./");
+  await expect(page).toHaveTitle("Game Dev Lab — 34 Playable Concepts");
+  const sandbox = page.locator(".hero__sandbox");
+  const canvas = sandbox.locator("canvas");
+  await expect(canvas).toHaveAttribute("data-ready", "true");
+  await sandbox.getByRole("button", { name: "Pause Particle system animation", exact: true }).click();
+  await page.waitForTimeout(100);
+  const before = await canvas.evaluate((node: HTMLCanvasElement) => node.toDataURL());
+  await sandbox.getByRole("button", { name: "Change effect" }).click();
+  await expect.poll(() => canvas.evaluate((node: HTMLCanvasElement) => node.toDataURL())).not.toBe(before);
+  await page.getByRole("searchbox", { name: "Search concepts" }).fill("seeded noise");
+  await expect(page.locator(".card")).toHaveCount(1);
+  await page.getByRole("button", { name: "Surprise me" }).click();
+  await expect(page).toHaveURL(/\/concepts\/seeded-noise\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Seeded noise");
+});

@@ -4,5 +4,19 @@ import type { Metadata } from "next";
 export const metadata: Metadata = { title: "About" };
 
 export default function About() {
-  return <main id="main" className="prose"><p className="detail__kicker">Behind the examples</p><h1>About this guide</h1><p>This is an independent educational project by huangyingting, built with Next.js and TypeScript. It explores 34 common game-development techniques through small interactive Canvas 2D demonstrations.</p><h2>Inspiration and authorship</h2><p>The four-chapter, animation-and-prompt format is inspired by <a href="https://gamedev-cheatsheet.com/" target="_blank" rel="noreferrer">Game Dev Cheat Sheet by Nicolas Zullo</a>. This is not an official mirror or an affiliated project. The explanations, prompt starters, layout implementation, and animation source here are independently written. The original site&apos;s JavaScript, artwork, and prose have not been copied or translated.</p><h2>How to learn with it</h2><p>Watch the example, pause it, and move your pointer or use the arrow keys to explore. Open a concept for a practical use case, a common mistake, and an implementation sketch. These are teaching examples, not production physics or rendering engines.</p><h2>Source and updates</h2><p>The complete application and typed demo algorithms are available in the <a href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">GitHub repository</a>. Watch the repository for updates or open an issue with a correction.</p><Link className="concept-link" href="/">Explore all concepts →</Link></main>;
+  return (
+    <main id="main" className="prose">
+      <p className="detail__kicker">Behind the experiments</p>
+      <h1>About this guide</h1>
+      <p>Game Dev Lab is an interactive field guide by huangyingting, built with Next.js and TypeScript. It explores 34 game-development techniques through small, playable Canvas 2D demonstrations.</p>
+      <h2>Learn by tinkering</h2>
+      <p>A technique is easier to understand when you can see it respond. Each experiment pairs a live demonstration with an explanation, a practical prompt starter, and field notes you can use in your own project.</p>
+      <h2>Find your next idea</h2>
+      <p>Search the library by mechanic or keyword, filter by discipline, or choose “Surprise me” to discover something new. Watch an example, pause it, and move your pointer or use the arrow keys to explore. Open its field notes for a use case, a common mistake, and an implementation sketch.</p>
+      <p>The examples are simplified teaching tools, not production physics or rendering engines. Adapt the ideas to your engine, measure performance in your own scenes, and tune the numbers for your game.</p>
+      <h2>Open to experimentation</h2>
+      <p>The application and typed demo algorithms are available under the MIT license in the <a href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">GitHub repository</a>. Watch the repository for updates, report a correction, or suggest the next experiment.</p>
+      <Link className="concept-link" href="/#library">Enter the lab →</Link>
+    </main>
+  );
 }

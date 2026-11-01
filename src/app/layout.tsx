@@ -4,10 +4,10 @@ import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Game Dev Cheat Sheet — 34 Interactive Concepts", template: "%s | Game Dev Cheat Sheet" },
+  title: { default: "Game Dev Lab — 34 Playable Concepts", template: "%s | Game Dev Lab" },
   description: "Explore 34 game development concepts with live interactive examples, TypeScript snippets, and practical AI prompt starters.",
 };
-export const viewport: Viewport = { themeColor: "#08080d" };
+export const viewport: Viewport = { themeColor: "#090c14" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

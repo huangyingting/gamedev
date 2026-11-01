@@ -1,59 +1,44 @@
 import Link from "next/link";
 import { Demo } from "@/components/Demo";
-import { Prompt } from "@/components/Prompt";
-import { chapters, concepts } from "@/lib/concepts";
+import { ConceptExplorer } from "@/components/ConceptExplorer";
+import { concepts } from "@/lib/concepts";
 
 export default function Home() {
+  const featured = concepts.find(concept => concept.slug === "particle-system")!;
   return (
     <main id="main">
       <section className="hero" id="top">
-        <div className="hero__floor" aria-hidden="true"><div className="hero__plane" /></div>
+        <div className="hero__orb hero__orb--one" aria-hidden="true" />
+        <div className="hero__orb hero__orb--two" aria-hidden="true" />
         <div className="hero__inner">
           <div className="hero__copy">
-            <p className="hero__kicker">Build better games with AI<span className="caret" aria-hidden="true" /></p>
-            <h1>Game dev terms<br /><em>for your next<br className="hero__break" /> AI prompt</em></h1>
-            <p className="hero__lede">Better instructions start with better vocabulary. Explore <strong>34 concepts</strong> through live examples, then take a practical prompt starter into your next game project.</p>
-            <a className="hero__follow" href="#chapter-3d">Explore the concepts <span aria-hidden="true">↓</span></a>
+            <p className="hero__kicker"><span className="status-dot" aria-hidden="true" />An interactive field guide</p>
+            <h1>Less guessing.<br /><em>More game.</em></h1>
+            <p className="hero__lede">The ideas behind games that feel great.<br />Explore <strong>34 playable concepts</strong>, understand the mechanics, and turn what you learn into your next AI prompt.</p>
+            <div className="hero__actions">
+              <a className="button-primary" href="#library">Enter the lab <span aria-hidden="true">↗</span></a>
+              <Link className="hero__secondary" href="/concepts/coyote-time/">Start with game feel <span aria-hidden="true">→</span></Link>
+            </div>
+            <div className="hero__facts" aria-label="Guide features"><span><b>34</b> live experiments</span><span><b>4</b> disciplines</span><span><b>∞</b> possibilities</span></div>
           </div>
-          <section className="updates" id="updates" aria-labelledby="updates-title">
-            <p className="updates__kicker">Keep experimenting</p>
-            <h2 id="updates-title">Your next game starts here.</h2>
-            <p>Follow the project for new examples and improvements.</p>
-            <a className="updates__button" href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">Watch on GitHub <span aria-hidden="true">↗</span></a>
-            <p className="updates__privacy">This version is hosted on GitHub Pages. There is no email signup or newsletter server, and we do not collect your email. <Link href="/privacy/">Privacy details</Link>.</p>
-            <div className="updates__stats"><span><b>34</b> concepts</span><span><b>4</b> chapters</span><span><b>100%</b> TypeScript</span></div>
+          <section className="hero__sandbox" data-category="systems" aria-labelledby="sandbox-title">
+            <div className="sandbox__bar"><span><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" /></span><span>PLAYGROUND / 001</span><span className="sandbox__live"><span className="status-dot" aria-hidden="true" />LIVE</span></div>
+            <div className="sandbox__title"><div><p>Featured experiment</p><h2 id="sandbox-title">A little controlled chaos.</h2></div><span aria-hidden="true">✳</span></div>
+            <Demo concept={featured} />
+            <div className="sandbox__footer"><span>One emitter. Endless expression.</span><Link href="/concepts/particle-system/">How it works <span aria-hidden="true">↗</span></Link></div>
           </section>
         </div>
       </section>
-      <div className="chapters">
-        {chapters.map(chapter => {
-          const items = concepts.filter(concept => concept.category === chapter.id);
-          return (
-            <section key={chapter.id} className="chapter" id={`chapter-${chapter.id}`} data-category={chapter.id}>
-              <header className="chapter__head">
-                <h2><span className="chapter__mark" aria-hidden="true" />{chapter.title}</h2>
-                <span className="chapter__count">{items.length} concepts</span>
-                <p>{chapter.description}</p>
-              </header>
-              <div className="grid">
-                {items.map(concept => (
-                  <article className="card" id={concept.slug} key={concept.slug} data-slug={concept.slug}>
-                    <Demo concept={concept} />
-                    <div className="card__body">
-                      <span className="card__num">{String(concept.number).padStart(2, "0")}</span>
-                      <h3><Link href={`/concepts/${concept.slug}/`}>{concept.title}</Link></h3>
-                      <p className="card__tagline">{concept.tagline}</p>
-                      <p className="card__text">{concept.description}</p>
-                      <Prompt title={concept.title} text={concept.prompt} />
-                      <Link className="concept-link" href={`/concepts/${concept.slug}/`}>Example & common mistake <span aria-hidden="true">→</span></Link>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
+      <section className="learning-path" aria-label="How to use the lab">
+        <div><span>01 / EXPLORE</span><p>See the idea in motion.</p></div>
+        <div><span>02 / UNDERSTAND</span><p>Get the why, not just the what.</p></div>
+        <div><span>03 / BUILD</span><p>Take a prompt. Make it yours.</p></div>
+      </section>
+      <ConceptExplorer />
+      <section className="updates" id="updates" aria-labelledby="updates-title">
+        <div><p className="updates__kicker">Built to be explored. Open to everyone.</p><h2 id="updates-title">Keep your curiosity in play.</h2><p>Dig into the TypeScript, suggest an experiment, or follow the next update.</p></div>
+        <a className="button-primary" href="https://github.com/huangyingting/gamedev" target="_blank" rel="noreferrer">Explore the source <span aria-hidden="true">↗</span></a>
+      </section>
     </main>
   );
 }
