@@ -119,6 +119,7 @@ test("Chinese controls respect reduced motion and stay usable on narrow screens"
 
 test("language switch uses a just-updated browser URL before React rerenders", async ({ page }) => {
   await page.goto("./");
+  await expect(page.locator(".hero__sandbox canvas")).toHaveAttribute("data-ready", "true");
   const path = new URL("about/", page.url()).pathname;
   await page.evaluate(path => {
     window.history.replaceState(window.history.state, "", path);
